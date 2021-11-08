@@ -1,9 +1,4 @@
-# DEPRECATED: typoscript-webpack-plugin
-
-This package will no longer receive updates, apart from dependency updates.
-
-Please consider using Sebastian Schreiber's awesome [Typo3 Encore Extension](https://github.com/sabbelasichon/typo3_encore).  
-In terms of functionality, it provides everything this plugin does and quite a bit more and it is much more flexible and reliable.
+**Fork of the [deprecated original by Michael Marcenich](https://github.com/m2sd/typoscript-webpack-plugin)**
 
 ## Description
 
