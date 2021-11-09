@@ -116,9 +116,10 @@ class TypoScriptPlugin {
             );
         }
         if (this.options.typoScriptAdditionalDefaults) {
-            this.options.typoScriptAdditionalDefaults = convertAdditionalTypoScript(
-                this.options.typoScriptAdditionalDefaults
-            );
+            this.options.typoScriptAdditionalDefaults =
+                convertAdditionalTypoScript(
+                    this.options.typoScriptAdditionalDefaults
+                );
         }
     }
 

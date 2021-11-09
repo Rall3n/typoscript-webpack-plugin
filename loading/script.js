@@ -1,6 +1,6 @@
 'use strict';
 
-(function(root, doc) {
+(function (root, doc) {
     function createElementFromHTML(htmlString) {
         var div = doc.createElement('div');
         div.innerHTML = htmlString.trim();
@@ -12,7 +12,7 @@
             loaded = doc.styleSheets.length;
         doc.head
             .querySelectorAll('.webpack-plugin-defer')
-            .forEach(function(node) {
+            .forEach(function (node) {
                 if (/^\s*<link[\s\S]+rel="stylesheet"/.test(node.textContent)) {
                     doc.head.replaceChild(
                         createElementFromHTML(node.textContent),
@@ -23,18 +23,18 @@
             });
 
         var expected = loaded + loading;
-        var check = setInterval(function() {
+        var check = setInterval(function () {
             if (doc.styleSheets.length >= expected) {
-                setTimeout(function() {
+                setTimeout(function () {
                     doc.getElementById(
                         'webpack-plugin-loader'
                     ).style.opacity = 0;
-                    setTimeout(function() {
+                    setTimeout(function () {
                         doc.querySelectorAll(
                             '#webpack-plugin-loader,' +
                                 'script[src*="webpack-loading.js"],' +
                                 'link[href*="webpack-loading.css"]'
-                        ).forEach(function(node) {
+                        ).forEach(function (node) {
                             node.parentElement.removeChild(node);
                         });
                     }, 500);
@@ -49,7 +49,7 @@
         root.webkitRequestAnimationFrame ||
         root.msRequestAnimationFrame;
     if (raf) {
-        raf(function() {
+        raf(function () {
             root.setTimeout(loadDeferredStyles, 0);
         });
     } else {
