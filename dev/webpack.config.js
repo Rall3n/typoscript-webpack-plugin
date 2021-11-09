@@ -1,8 +1,10 @@
 const path = require('path');
+const fs = require('fs');
+
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPluin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin').WebpackManifestPlugin;
-const CopyPlugin = require('copy-webpack-plugin');
+const EventHooksPlugin = require('event-hooks-webpack-plugin');
 const replaceLoader = require('./insert-template');
 const Self = require('..');
 
@@ -33,14 +35,17 @@ module.exports = {
             },
             typoScriptPublicPath: '/'
         }),
-        new CopyPlugin({
-            patterns: [
-                {
-                    from: path.resolve(__dirname, 'src', 'index.html'),
-                    to: '../index.html',
-                    transform: replaceLoader
-                }
-            ]
+        new EventHooksPlugin({
+            done: () => {
+                const content = fs.readFileSync(
+                    path.resolve(__dirname, 'src', 'index.html')
+                );
+
+                fs.writeFileSync(
+                    path.resolve(__dirname, 'dist', 'index.html'),
+                    replaceLoader(content)
+                );
+            }
         }),
         new ManifestPlugin()
     ],
