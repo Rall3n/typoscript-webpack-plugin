@@ -7,8 +7,8 @@
         "loading"
     ],
     "scripts": {
-        "test": "webpack --config dev/webpack.config.js && node ./dev/insert-template.js",
-        "test:watch": "cross-env WATCH_MODE=on npm run test",
+        "test": "webpack --config dev/webpack.config.js",
+        "test:watch": "npm run test -- --watch",
         "lint": "eslint --ignore-path .gitignore --ignore-pattern *.min.js .",
         "lint:fix": "npm run lint -- --fix .",
         "lint:check": "eslint-config-prettier .eslintrc.js",
@@ -47,7 +47,7 @@
         "@commitlint/config-conventional": "^14.1.0",
         "babel-eslint": "^10.1.0",
         "clean-webpack-plugin": "^4.0.0",
-        "cross-env": "^7.0.3",
+        "copy-webpack-plugin": "^6.4.1",
         "css-loader": "^5.2.7",
         "cz-conventional-changelog": "^3.3.0",
         "eslint": "^8.2.0",

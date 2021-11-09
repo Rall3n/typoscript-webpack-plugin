@@ -2,6 +2,8 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPluin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin').WebpackManifestPlugin;
+const CopyPlugin = require('copy-webpack-plugin');
+const replaceLoader = require('./insert-template');
 const Self = require('..');
 
 module.exports = {
@@ -31,11 +33,19 @@ module.exports = {
             },
             typoScriptPublicPath: '/'
         }),
+        new CopyPlugin({
+            patterns: [
+                {
+                    from: path.resolve(__dirname, 'src', 'index.html'),
+                    to: '../index.html',
+                    transform: replaceLoader
+                }
+            ]
+        }),
         new ManifestPlugin()
     ],
     output: {
         filename: 'bundle.js',
         path: path.join(__dirname, 'dist', 'assets')
-    },
-    watch: process.env.WATCH_MODE === 'on'
+    }
 };
