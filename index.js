@@ -18,7 +18,8 @@ const pluginDefaults = {
     loading: {
         type: 'default',
         background: '#2c3e50'
-    }
+    },
+    usePosix: true
 };
 
 const convertIncludeTypes = option => {
@@ -143,7 +144,10 @@ class TypoScriptPlugin {
             assetOutput.push(
                 name +
                     ' = ' +
-                    path.join(this.options.typoScriptPublicPath, asset)
+                    path[this.options.usePosix ? 'posix' : 'win32'].join(
+                        this.options.typoScriptPublicPath,
+                        asset
+                    )
             );
 
             const additionalTypoScript = [];
@@ -261,7 +265,9 @@ ${inputSrc.css}
         const typoScript = [];
 
         const scriptFilename = `webpack-loading.min.js`;
-        const scriptPublicPath = path.join(publicPath, scriptFilename);
+        const scriptPublicPath = path[
+            this.options.usePosix ? 'posix' : 'win32'
+        ].join(publicPath, scriptFilename);
 
         // emit js in a file
         compilation.assets[scriptFilename] = {
