@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/Rall3n/typoscript-webpack-plugin/compare/v1.2.12...v1.3.0) (2021-11-10)
+
+
+### Features
+
+* add option to use posix paths ([eee9a3e](https://github.com/Rall3n/typoscript-webpack-plugin/commit/eee9a3ef475d9a28f711cb2fbf42356a4d3545db))
+
+
+### Bug Fixes
+
+* **tests:** use event hooks instead of copy plugin ([61eb263](https://github.com/Rall3n/typoscript-webpack-plugin/commit/61eb263aed3e5259d3633192080261a26de28b20))
+
 ### [1.2.12](https://github.com/Rall3n/typoscript-webpack-plugin/compare/v1.2.11...v1.2.12) (2021-11-09)
 
 ### [1.2.11](https://github.com/m2sd/typoscript-webpack-plugin/compare/v1.2.10...v1.2.11) (2020-03-07)
