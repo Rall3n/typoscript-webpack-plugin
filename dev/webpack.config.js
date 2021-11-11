@@ -1,7 +1,6 @@
 const path = require('path');
 const fs = require('fs');
 
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPluin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin').WebpackManifestPlugin;
 const EventHooksPlugin = require('event-hooks-webpack-plugin');
@@ -20,12 +19,11 @@ module.exports = {
             },
             {
                 test: /\.(png|svg|jpg|gif)$/,
-                use: ['file-loader']
+                type: 'asset/resource'
             }
         ]
     },
     plugins: [
-        new CleanWebpackPlugin(),
         new MiniCssExtractPluin(),
         new Self({
             outputPath: path.join(__dirname, 'dist', 'typoscript'),
@@ -51,6 +49,7 @@ module.exports = {
     ],
     output: {
         filename: 'bundle.js',
-        path: path.join(__dirname, 'dist', 'assets')
+        path: path.join(__dirname, 'dist', 'assets'),
+        clean: true
     }
 };

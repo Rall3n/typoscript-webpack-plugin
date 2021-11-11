@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const pick = require('just-pick');
 const merge = require('deepmerge');
+const version = require('webpack').version;
 
 /** internals */
 const pluginDefaults = {
@@ -71,6 +72,8 @@ const getChunkOptions = (chunk, options = {}, defaults = {}) => {
     if (defaults.files) {
         delete defaults.files;
     }
+
+    chunk.files = Array.from(chunk.files);
 
     defaults = merge(defaults, pick(chunk, ['id', 'name', 'files']));
 
@@ -270,10 +273,7 @@ ${inputSrc.css}
         ].join(publicPath, scriptFilename);
 
         // emit js in a file
-        compilation.assets[scriptFilename] = {
-            source: () => inputSrc.js,
-            size: () => inputSrc.js.length
-        };
+        this.emitAsset(compilation, scriptFilename, inputSrc.js);
 
         // include js in typoscript
         typoScript.push(
@@ -316,13 +316,14 @@ ${inputSrc.css}
 
     emitTypoScript(compilation, callback) {
         const outputLines = [];
+        const compilationChunks = Array.from(compilation.chunks);
         if (this.options.chunks) {
             this.options.chunks.forEach(chunkOptions => {
                 if (typeof chunkOptions === 'string') {
                     chunkOptions = { name: chunkOptions };
                 }
 
-                const chunk = compilation.chunks.find(chunk =>
+                const chunk = compilationChunks.find(chunk =>
                     chunkOptions.id
                         ? chunkOptions.id === chunk.id
                         : chunkOptions.name === chunk.name
@@ -331,7 +332,7 @@ ${inputSrc.css}
             });
         } else {
             outputLines.push(
-                ...compilation.chunks.map(chunk =>
+                ...compilationChunks.map(chunk =>
                     this.generateTypoScript(chunk)
                 )
             );
@@ -360,21 +361,52 @@ ${inputSrc.css}
             this.options.filename
         );
 
-        compilation.assets[outputPath] = {
-            source: () => output,
-            size: () => output.length
-        };
+        this.emitAsset(compilation, outputPath, output);
 
-        callback();
+        callback && callback();
     }
 
     apply(compiler) {
-        compiler.hooks.emit.tapAsync(
-            'TypoScriptPlugin',
-            (compilation, callback) => {
-                this.emitTypoScript(compilation, callback);
-            }
-        );
+        if (!version.startsWith('5')) {
+            compiler.hooks.emit.tapAsync(
+                'TypoScriptPlugin',
+                (compilation, callback) =>
+                    this.emitTypoScript(compilation, callback)
+            );
+        } else {
+            compiler.hooks.thisCompilation.tap(
+                'TypoScriptPlugin',
+                compilation =>
+                    compilation.hooks.processAssets.tapAsync(
+                        {
+                            name: 'TypoScriptPlugin',
+                            stage: compiler.webpack.Compilation
+                                .PROCESS_ASSETS_STAGE_OPTIMIZE_INLINE
+                        },
+                        (compilationAssets, callback) =>
+                            this.emitTypoScript(compilation, callback)
+                    )
+            );
+        }
+    }
+
+    /**
+     * @param {string} filename
+     * @param {string} content
+     */
+    emitAsset(compilation, filename, content) {
+        if (!version.startsWith('5')) {
+            compilation.assets[filename] = {
+                source: () => content,
+                size: () => content.length
+            };
+        } else {
+            const { RawSource } = compilation.compiler.webpack.sources;
+
+            compilation.emitAsset(filename, new RawSource(content), {
+                size: content.length
+            });
+        }
     }
 }
 
