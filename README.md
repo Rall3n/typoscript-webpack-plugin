@@ -1,16 +1,18 @@
-**Fork of the [deprecated original by Michael Marcenich](https://github.com/m2sd/typoscript-webpack-plugin)**
+# TypoScript Webpack Plugin
+
+## Disclaimer
+
+This is a **fork** of the [deprecated original project by Michael Marcenich](https://github.com/m2sd/typoscript-webpack-plugin).
+Credits for the idea and the work until deprecation go to him.
 
 ## Description
 
-Generate a typoscript file for webpack generated assets.
-I am rather new to webpack plugins so suggestions and pull requests are very welcome.
-And of course you are welcome to fork.
+A plugin to generate a TypoScript file to include webpack generated assets into your TYPO3 CMS system.
+It supports both `webpack@4` and `webpack@5`.
 
 ## Installation
 
-I suggest installing as dependency rather then as devDependency as that is normally advisable for frontend projects.
-(In the end it does not make that much of a difference as you are unlikely to install your dependencies with the `NODE_ENV` set to production,
-in which case though devDependencies are skipped)
+This plugin requires `webpack` as a `peerDependency`. Make sure it is installed before using it.
 
 ```bash
 npm i -S typoscript-webpack-plugin
@@ -22,32 +24,22 @@ or
 yarn add typoscript-webpack-plugin
 ```
 
-`webpack` is under peerDependencies so you'll have to install it yourself, but given that you're looking for plugins I'd surmise you already have it installed.
-
 ## Usage
 
->tl;dr: Include it last in your webpack config
-
-In your webpack config, Include it after any plugins that trigger on the `emit` hook and modify files of the compilation chunks.
-To be sure, just include it last, as it only reads basic settings of the compilation chunks (namely `id`, `name` and `files`) and adds one or two files (depending on whether or not the [`loading` option](#loading-option) is used) to the compilation assets.
+It is recommended to include the plugin after every other plugin to ensure correct functionality.
 
 ```javascript
-// ...
 const TypoScriptPlugin = require("typoscript-webpack-plugin");
-// ...
 
 module.exports = {
-  // ...
   plugins: [
       // ... (other plugins)
       new TypoScriptPlugin(),
   ]
-  // ...
 }
 ```
 
-This will generate a file `WebpackAssets.typoscript` in the same folder where `package.json` resides.
-`WebpackAssets.typoscript` will contain the following code:
+This basic setup will generate a `WebpackAssets.typoscript` file in your project root (next to the `package.json` file) with the following content:
 
 ```typo3_typoscript
 page {
@@ -65,10 +57,6 @@ For more information about TypoScript and Typo3 please consult its [documentatio
 
 ## Configuration
 
-The plugin tries to define sensible defaults, but as there are vastly different implementation styles out there,
-I tried to make it as customizable as possible (for the limited functionality it has).
-If further customization is needed please don't shy away from creating an issue.
-
 ### Global options
 
 | option                          | type                              | description                                                                                                                  | default                                                                                      |
@@ -81,6 +69,7 @@ If further customization is needed please don't shy away from creating an issue.
 | `typoScriptAdditionalDefaults`  | `Object`, `Array` or `string`     | The default typoscript to be appended to includes (can be overwritten by chunk configuration, see below)                     | `null`                                                                                       |
 | `chunks`                        | `Array` of `Object`s or `string`s | Configurations for specific chunks, if `null` all chunks will be included (see below)                                        | `null`                                                                                       |
 | `loading`                       | `Object`, `string` or `boolean`   | Generate a loading animation to be displayed until the resources are loaded                                                  | `false`                                                                                      |
+| `usePosix`                      | `boolean`                         | Format paths in `posix` format (forward slashes as delimiters).                                                              | `true`                                                                                       |
 
 #### `typoScriptIncludeTypeDefaults`
 
@@ -143,9 +132,8 @@ Same rules apply as in the [`typoScriptAdditionalDefaults` global option](#typos
 
 ```javascript
 module.exports = {
-    //...
     plugins: [
-        //...
+        //... other plugins
         new TypoScriptPlugin({
             chunks: [
                 {
@@ -158,7 +146,6 @@ module.exports = {
             ]
         })
     ]
-    //...
 }
 ```
 
@@ -182,9 +169,9 @@ webpack_main.if.equals.data = GP:someGETVar
 
 ### Loading option
 
-The loading option can either be a `boolean` a `string` or an `Object`.
+The loading option can either be a `boolean`, a `string` or an `Object`.
 
-If the a `boolean` value of `true` is given, then loading will be enabled with the default settings:
+If the `boolean` value of `true` is given, then loading will be enabled with the default settings:
 
 ```javascript
 {
@@ -194,7 +181,7 @@ If the a `boolean` value of `true` is given, then loading will be enabled with t
 ```
 
 If a `string` is given, then it will be interpreted as identifier for one of the predefined spinners.
-The spinners are ported from the awesome [Spinkit](http://tobiasahlin.com/spinkit/) project. You can use its demo page to preview the spinners.
+The spinners are ported from the [Spinkit](http://tobiasahlin.com/spinkit/) project. You can use its demo page to preview the spinners.
 
 The corresponding `string` keys in the order they are displayed on the demo page are:
 
