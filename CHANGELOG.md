@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/Rall3n/typoscript-webpack-plugin/compare/v1.3.0...v2.0.0) (2021-11-11)
+
+
+### Features
+
+* add webpack 5 support ([7671294](https://github.com/Rall3n/typoscript-webpack-plugin/commit/7671294a38deb8179cb6bd40032e4069ab5c9333))
+
 ## [1.3.0](https://github.com/Rall3n/typoscript-webpack-plugin/compare/v1.2.12...v1.3.0) (2021-11-10)
 
 
