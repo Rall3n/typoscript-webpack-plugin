@@ -66,16 +66,17 @@ const getChunkOptions = (chunk, options = {}, defaults = {}) => {
         );
     }
 
-    if (options.files) {
-        delete options.files;
+    if (options.chunkFiles) {
+        delete options.chunkFiles;
     }
-    if (defaults.files) {
-        delete defaults.files;
+    if (defaults.chunkFiles) {
+        delete defaults.chunkFiles;
     }
 
-    chunk.files = Array.from(chunk.files);
+    const chunkFiles = Array.from(chunk.files);
 
-    defaults = merge(defaults, pick(chunk, ['id', 'name', 'files']));
+    defaults = merge(defaults, pick(chunk, ['id', 'name']));
+    defaults = merge(defaults, { chunkFiles });
 
     return merge(defaults, options);
 };
@@ -134,7 +135,7 @@ class TypoScriptPlugin {
         });
 
         const output = [];
-        options.files.forEach(asset => {
+        options.chunkFiles.forEach(asset => {
             const assetOutput = [];
             const [, extension] = asset.match(/.*?(?:\.([^.]+))?$/);
             const name =
